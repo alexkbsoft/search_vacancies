@@ -13,9 +13,8 @@ import {
 import { connect } from 'react-redux';
 import { loadVacancies, loadNext } from '../reducers/reducer';
 import _ from 'lodash';
-import moment from 'moment';
-import 'moment/locale/ru';
-moment.locale('ru');
+import styles from './styles';
+import ListItem from './ListItem';
 
 type Props = {};
 class HomeComponent extends Component<Props> {
@@ -64,21 +63,7 @@ class HomeComponent extends Component<Props> {
             refreshing={this.props.loading}
             onRefresh={ () => this.props.loadVacancies() }
             onEndReachedThreshold={0.5}
-            renderItem={({ item }) => {
-              return (
-                  <View style={{padding:10, borderBottomWidth:1}}>
-                    <Text style={{color:'black',
-                      fontSize:18,
-                      paddingBottom:5
-                    }}>
-                      {item.header}
-                    </Text>
-                    <Text>{ moment(item.add_date).format('MMMM Do YYYY, h:mm a')}</Text>
-                    <Text style={{fontSize:20}}>{item.salary}</Text>
-
-                  </View>
-                )}
-              }
+            renderItem={ ({ item }) => <ListItem item={item}/>}
           />}
 
           { emptyRes && !this.props.error && <Text style={styles.emptyText}>
@@ -95,28 +80,6 @@ class HomeComponent extends Component<Props> {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'stretch',
-    backgroundColor: '#F5FCFF',
-  },
-  emptyText:{
-    fontSize:18,
-    textAlign:'center'
-  },
-  errorText: {
-    textAlign:'center',
-    marginVertical:10,
-    fontSize: 20
-  },
-  errorContainer:{
-    flex:1,
-    alignItems:'center',
-    justifyContent:'center'
-  }
-});
 
 const mapStateToProps = state => {
   return {
