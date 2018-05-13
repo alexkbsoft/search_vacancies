@@ -6,11 +6,16 @@ import {
   View
 } from 'react-native';
 import HomeComponent from './src/components/HomeComponent';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider, connect } from 'react-redux';
 import reducer from './src/reducers/reducer';
+import { root_saga } from "./src/sagas";
+import createSagaMiddleware from "redux-saga";
 
-const store = createStore(reducer);
+//создаем хранилище и подключаем сагу
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(reducer, undefined, applyMiddleware(sagaMiddleware));
+sagaMiddleware.run(root_saga);
 
 type Props = {};
 export default class App extends Component<Props> {
@@ -28,8 +33,6 @@ export default class App extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   }
 });
