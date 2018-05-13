@@ -28,5 +28,10 @@ export default StyleSheet.create({
     flex:1,
     alignItems:'center',
     justifyContent:'center'
+  },
+  itemHeader:{
+    color:'black',
+    fontSize:18,
+    paddingBottom:5
   }
 });

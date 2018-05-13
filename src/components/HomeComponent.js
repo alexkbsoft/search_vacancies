@@ -6,53 +6,29 @@ import {
   Text,
   View,
   FlatList,
-  Keyboard,
   TextInput,
   Button
 } from 'react-native';
 import { connect } from 'react-redux';
 import { loadVacancies, loadNext } from '../reducers/reducer';
-import _ from 'lodash';
 import styles from './styles';
 import ListItem from './ListItem';
+import SearchPannel from './SearchPannel';
 
 type Props = {};
 class HomeComponent extends Component<Props> {
 
-  constructor(){
-    super();
-
-    //предотвращаем поиск на каждый ввод буквы - задержка 1.5 сек
-    this._debounsedRequest = _.bind(
-      _.debounce( this.newRequest, 1500), this);
-  }
-
-  componentDidMount(){
+  componentDidMount() {
     this.props.loadVacancies();
-  }
-
-  newRequest(q) {
-    this.props.loadVacancies(q);
-    Keyboard.dismiss();
   }
 
   render() {
     let emptyRes = !this.props.loading && this.props.q && this.props.vacs.length ===0;
     return (
       <View style={styles.container}>
-        <View style={{backgroundColor:'#fff',
-          paddingBottom: 10}}>
-          <TextInput
-            style={{fontSize:18}}
-            placeholder="Поиск"
-            onChangeText={(text)=>{
-              this._debounsedRequest(text);
-            }}
-          />
-          { this.props.count >0 &&
-            <Text style={{color:'green', textAlign:'center'}}>
-            Найдено {this.props.count} вакансий</Text> }
-        </View>
+        <SearchPannel
+          count={this.props.count}
+          onStartSearch={ (q) => this.props.loadVacancies(q) }/>
 
         { !emptyRes && !this.props.error &&
           <FlatList
@@ -66,14 +42,16 @@ class HomeComponent extends Component<Props> {
             renderItem={ ({ item }) => <ListItem item={item}/>}
           />}
 
-          { emptyRes && !this.props.error && <Text style={styles.emptyText}>
-            Ничего не найдено</Text>}
+          { emptyRes && !this.props.error &&
+            <Text style={styles.emptyText}>
+              Ничего не найдено
+            </Text>}
 
             {this.props.error &&
             <View style={styles.errorContainer}>
               <Text style={styles.errorText}>Что-то пошло не так... :(</Text>
               <Button title={"Попробовать еще раз."}
-              onPress={()=> this.props.loadVacancies(this.props.q)}/>
+              onPress={()=> this.props.loadVacancies(this.props.q) }/>
             </View>}
 
       </View>
