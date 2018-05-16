@@ -5,6 +5,7 @@ export default function reducer(state, action) {
     case GET_VACANCIES:
       return { ...state,
         loading: true,
+        lastPage: false,
         page:0,
         vacs:[],
         q:action.payload.q,
@@ -14,9 +15,16 @@ export default function reducer(state, action) {
     case API_CALL_FAILURE:
       return { ...state, loading: false, error:true };
     case API_CALL_SUCCESS:
+
+      if(action.payload.data.length === 0) {
+        return { ...state,
+          loading: false,
+          lastPage: true
+        };
+      }
       return { ...state,
         loading: false,
-        vacs:state.vacs.concat(action.payload.data),
+        vacs: state.vacs.concat(action.payload.data),
         count: action.payload.count };
     default:
       return state;

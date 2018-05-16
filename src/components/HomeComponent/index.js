@@ -7,7 +7,8 @@ const mapStateToProps = state => {
     count: state.count,
     loading: state.loading,
     q: state.q,
-    error: state.error
+    error: state.error,
+    lastPage: state.lastPage
   };
 };
 

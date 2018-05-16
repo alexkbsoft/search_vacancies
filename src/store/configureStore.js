@@ -6,7 +6,8 @@ const INITIAL_STATE = {
   vacs: [],
   loading:false,
   q:null,
-  page:0
+  page:0,
+  lastPage:false
 };
 
 export default function configureStore(initialState=INITIAL_STATE){

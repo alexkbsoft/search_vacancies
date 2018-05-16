@@ -31,7 +31,7 @@ export default class HomeComponent extends Component {
           style={styles.flatList}
           data={this.props.vacs}
           onEndReached={ () => {
-            if(this.props.loading) return;
+            if(this.props.loading || this.props.lastPage) return;
 
             this.props.dispatch( loadPage() )
           } }
@@ -67,5 +67,6 @@ HomeComponent.propTypes = {
   count: PropTypes.number,
   error: PropTypes.bool,
   loadNext: PropTypes.func,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  lastPage: PropTypes.bool
 };
