@@ -1,25 +1,21 @@
 
 import React, { Component } from 'react';
 import {
-  Platform,
-  StyleSheet,
   Text,
   View,
   FlatList,
-  TextInput,
   Button
 } from 'react-native';
-import { connect } from 'react-redux';
-import { loadVacancies, loadNext } from '../reducers/reducer';
 import styles from './styles';
-import ListItem from './ListItem';
-import SearchPannel from './SearchPannel';
+import ListItem from '../ListItem';
+import SearchPannel from '../SearchPanel';
+import PropTypes from 'prop-types';
+import {startLoading, loadPage} from './actions';
 
-type Props = {};
-class HomeComponent extends Component<Props> {
+export default class HomeComponent extends Component {
 
   componentDidMount() {
-    this.props.loadVacancies();
+    this.props.dispatch( startLoading() );
   }
 
   render() {
@@ -28,16 +24,16 @@ class HomeComponent extends Component<Props> {
       <View style={styles.container}>
         <SearchPannel
           count={this.props.count}
-          onStartSearch={ (q) => this.props.loadVacancies(q) }/>
+          onStartSearch={ (q) => this.props.dispatch( startLoading(q) ) }/>
 
         { !emptyRes && !this.props.error &&
           <FlatList
-            style={{flex:1}}
+            style={styles.flatList}
             data={this.props.vacs}
-            onEndReached={ () => this.props.loadNext() }
+            onEndReached={ () => this.props.dispatch( loadPage() ) }
             keyExtractor={ item => item.id.toString() }
             refreshing={this.props.loading}
-            onRefresh={ () => this.props.loadVacancies() }
+            onRefresh={ () => this.props.dispatch( startLoading(this.props.q) ) }
             onEndReachedThreshold={0.5}
             renderItem={ ({ item }) => <ListItem item={item}/>}
           />}
@@ -59,19 +55,13 @@ class HomeComponent extends Component<Props> {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    vacs: state.vacs,
-    count: state.count,
-    loading: state.loading,
-    q: state.q,
-    error: state.error
-  };
+HomeComponent.propTypes = {
+  loadVacancies: PropTypes.func,
+  loading: PropTypes.bool,
+  q: PropTypes.string,
+  vacs: PropTypes.array,
+  count: PropTypes.number,
+  error: PropTypes.bool,
+  loadNext: PropTypes.func,
+  dispatch: PropTypes.func
 };
-
-const mapDispatchToProps = {
-  loadVacancies,
-  loadNext
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeComponent);

@@ -1,39 +1,24 @@
-export const GET_VACANCIES = 'search_vacancies/load';
-export const GET_PAGE = 'search_vacancies/get_page';
-export const API_CALL_SUCCESS = 'search_vacancies/api_success';
-export const API_CALL_FAILURE = 'search_vacancies/api_failure';
+import {GET_VACANCIES, GET_PAGE, API_CALL_FAILURE, API_CALL_SUCCESS} from '../actionTypes';
 
-export default function reducer(state = { vacs: [], loading:false, q:null }, action) {
+export default function reducer(state, action) {
   switch (action.type) {
     case GET_VACANCIES:
       return { ...state,
         loading: true,
+        page:0,
         vacs:[],
         q:action.payload.q,
         error:null };
     case GET_PAGE:
-      return { ...state, loading: true };
+      return { ...state, loading: true, page: state.page+1 };
     case API_CALL_FAILURE:
       return { ...state, loading: false, error:true };
     case API_CALL_SUCCESS:
       return { ...state,
         loading: false,
-        vacs:[ ...state.vacs, ...action.payload.page],
+        vacs:state.vacs.concat(action.payload.data),
         count: action.payload.count };
     default:
       return state;
   }
-}
-
-export function loadVacancies(q) {
-  return {
-    type: GET_VACANCIES,
-    payload: {q}
-  };
-}
-
-export function loadNext() {
-  return {
-    type: GET_PAGE
-  };
 }

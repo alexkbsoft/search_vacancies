@@ -1,15 +1,11 @@
 import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  Keyboard,
-  TextInput,
-  Button
+  StyleSheet
 } from 'react-native';
 
 export default StyleSheet.create({
+  flatList:{
+    flex:1
+  },
   container: {
     flex: 1,
     alignItems: 'stretch',
@@ -28,10 +24,5 @@ export default StyleSheet.create({
     flex:1,
     alignItems:'center',
     justifyContent:'center'
-  },
-  itemHeader:{
-    color:'black',
-    fontSize:18,
-    paddingBottom:5
   }
 });

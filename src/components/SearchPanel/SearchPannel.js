@@ -7,9 +7,10 @@ import {
   TextInput
 } from 'react-native';
 import _ from 'lodash';
+import styles from './styles';
+import PropTypes from 'prop-types';
 
-type Props = {};
-export default class SearchPannel extends Component<Props>{
+export default class SearchPannel extends Component{
 
   constructor(){
     super();
@@ -27,18 +28,22 @@ export default class SearchPannel extends Component<Props>{
   }
 
   render(){
-    return <View style={{backgroundColor:'#fff',
-      paddingBottom: 10}}>
+    return <View style={styles.searchPanel}>
       <TextInput
-        style={{fontSize:18}}
+        style={styles.searchInput}
         placeholder="Поиск"
         onChangeText={(text)=>{
           this._debounsedRequest(text);
         }}
       />
       { this.props.count >0 &&
-        <Text style={{color:'green', textAlign:'center'}}>
+        <Text style={styles.foundCount}>
           Найдено {this.props.count} вакансий</Text> }
     </View>;
   }
 }
+
+SearchPannel.propTypes = {
+  onStartSearch: PropTypes.func,
+  count: PropTypes.number
+};
