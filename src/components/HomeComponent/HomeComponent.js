@@ -27,28 +27,32 @@ export default class HomeComponent extends Component {
           onStartSearch={ (q) => this.props.dispatch( startLoading(q) ) }/>
 
         { !emptyRes && !this.props.error &&
-          <FlatList
-            style={styles.flatList}
-            data={this.props.vacs}
-            onEndReached={ () => this.props.dispatch( loadPage() ) }
-            keyExtractor={ item => item.id.toString() }
-            refreshing={this.props.loading}
-            onRefresh={ () => this.props.dispatch( startLoading(this.props.q) ) }
-            onEndReachedThreshold={0.5}
-            renderItem={ ({ item }) => <ListItem item={item}/>}
-          />}
+        <FlatList
+          style={styles.flatList}
+          data={this.props.vacs}
+          onEndReached={ () => {
+            if(this.props.loading) return;
 
-          { emptyRes && !this.props.error &&
-            <Text style={styles.emptyText}>
-              Ничего не найдено
-            </Text>}
+            this.props.dispatch( loadPage() )
+          } }
+          keyExtractor={ item => item.id.toString() }
+          refreshing={this.props.loading}
+          onRefresh={ () => this.props.dispatch( startLoading(this.props.q) ) }
+          onEndReachedThreshold={0.5}
+          renderItem={ ({ item }) => <ListItem item={item}/>}
+        />}
 
-            {this.props.error &&
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>Что-то пошло не так... :(</Text>
-              <Button title={"Попробовать еще раз."}
-              onPress={()=> this.props.loadVacancies(this.props.q) }/>
-            </View>}
+        { emptyRes && !this.props.error ?
+        <Text style={styles.emptyText}>
+          Ничего не найдено
+        </Text> : null}
+
+        {this.props.error?
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>Что-то пошло не так... :(</Text>
+            <Button title={"Попробовать еще раз."}
+                    onPress={()=> this.props.dispatch( startLoading(this.props.q) ) }/>
+          </View> : null}
 
       </View>
     );

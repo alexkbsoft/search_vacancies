@@ -17,7 +17,7 @@ export default class SearchPannel extends Component{
 
     //предотвращаем поиск на каждый ввод буквы - задержка 1.5 сек
     this._debounsedRequest = _.bind(
-      _.debounce( this.newRequest, 1500), this);
+      _.debounce( this.newRequest, 500), this);
   }
 
   newRequest(q) {

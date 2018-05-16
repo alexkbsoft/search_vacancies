@@ -1,4 +1,5 @@
 import {GET_VACANCIES, GET_PAGE, API_CALL_FAILURE, API_CALL_SUCCESS} from '../../actionTypes';
+import Pager from "../utils/pager";
 const PAGE_SIZE = 25;
 
 export function loadVacancies(q) {
@@ -32,7 +33,7 @@ function apiSuccess(count, data){
 }
 
 export function startLoading(q){
-  console.log('start load');
+  Pager.makeNew();
   return function(dispatch, getState){
     dispatch( loadVacancies(q) );
 
@@ -51,23 +52,14 @@ export function loadPage() {
 }
 
 function fetchPage(q,page,dispatch){
-  fetchApi( q, page*PAGE_SIZE )
+  Pager.instance().getNext(q, PAGE_SIZE, page*PAGE_SIZE)
     .then( result=> result.json())
     .then( result => {
-      console.log('result: ', result);
       const {metadata, vacancies} = result;
       dispatch( apiSuccess(metadata.resultset.count, vacancies, page+1) );
     })
     .catch( error => {
-      console.log('error:', error);
       dispatch( apiFailure(error) );
     });
 }
 
-//получить страницу данных
-function fetchApi(q, offset) {
-  let params = `offset=${encodeURIComponent(offset)}&limit=${PAGE_SIZE}`+
-    `${ q? '&q=' + encodeURIComponent(q) : ''}`;
-
-  return fetch(`https://api.zp.ru/v1/vacancies?${params}`);
-}
